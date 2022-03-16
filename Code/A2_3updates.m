@@ -117,27 +117,29 @@ for t=2:500
 
         
         % Reflection on bottom of upper box
-%         if (py(k) >= 0.6e-7) && (0.8e-7 <= px(k) && px(k) <= 1.2e-7)
-%             if SPECDIFF_BOUND == 1
-%                 vx(k) = (vth/sqrt(2))*randn();
-%                 vy(k) = (vth/sqrt(2))*randn();
-%             else
-%                 vy(k) = -vy(k);
-%             end
-%             py(k) = 0.601e-7;
-%         end
-%         % Reflection on top of lower box
-%         if (py(k) <= 0.4e-7) && (0.8e-7 <= px(k) && px(k) <= 1.2e-7)
-%             if SPECDIFF_BOUND == 1
-%                 vx(k) = (vth/sqrt(2))*randn();
-%                 vy(k) = (vth/sqrt(2))*randn();
-%             else
-%                 vy(k) = -vy(k);
-%             end
-%             py(k) = 0.399e-7;
-%         end
+        if (py(k) >= 0.6e-7) && (0.8e-7 <= px(k) && px(k) <= 1.2e-7)...
+           && ( 0.8e-7 <= px_prev(k) && px_prev(k) <= 1.2e-7)
+            if SPECDIFF_BOUND == 1
+                vx(k) = (vth/sqrt(2))*randn();
+                vy(k) = (vth/sqrt(2))*randn();
+            else
+                vy(k) = -vy(k);
+            end
+            py(k) = 0.601e-7;
+        %end
+        % Reflection on top of lower box
+        elseif (py(k) <= 0.4e-7) && (0.8e-7 <= px(k) && px(k) <= 1.2e-7)...
+               && (0.8e-7 <= px_prev(k) && px_prev(k) <= 1.2e-7)
+            if SPECDIFF_BOUND == 1
+                vx(k) = (vth/sqrt(2))*randn();
+                vy(k) = (vth/sqrt(2))*randn();
+            else
+                vy(k) = -vy(k);
+            end
+            py(k) = 0.399e-7;
+        %end
         % Reflection on left of lower box
-        if (0 <= py(k) && py(k) <= 0.4e-7) && (0.8e-7 <= px(k) && px(k) <= 1e-7)
+        elseif (0 <= py(k) && py(k) <= 0.4e-7) && (0.8e-7 <= px(k) && px(k) <= 1e-7)
             if SPECDIFF_BOUND == 1
                 vx(k) = (vth/sqrt(2))*randn();
                 vy(k) = (vth/sqrt(2))*randn();
@@ -145,9 +147,9 @@ for t=2:500
                 vx(k) = -vx(k);
             end
             px(k) = 0.799e-7;
-        end
+        %end
         % Reflection on right of lower box
-        if (0 <= py(k) && py(k) <= 0.4e-7) && (1e-7 <= px(k) && px(k) <= 1.2e-7)
+        elseif (0 <= py(k) && py(k) <= 0.4e-7) && (1e-7 <= px(k) && px(k) <= 1.2e-7)
             if SPECDIFF_BOUND == 1
                 vx(k) = (vth/sqrt(2))*randn();
                 vy(k) = (vth/sqrt(2))*randn();
@@ -155,9 +157,9 @@ for t=2:500
                 vx(k) = -vx(k);
             end
             px(k) = 1.201e-7;
-        end
+        %end
         % Reflection on left of upper box
-        if (0.6e-7 <= py(k) && py(k) <= 1e-7) && (0.8e-7 <= px(k) && px(k) <= 1e-7)
+        elseif (0.6e-7 <= py(k) && py(k) <= 1e-7) && (0.8e-7 <= px(k) && px(k) <= 1e-7)
             if SPECDIFF_BOUND == 1
                 vx(k) = (vth/sqrt(2))*randn();
                 vy(k) = (vth/sqrt(2))*randn();
@@ -165,9 +167,9 @@ for t=2:500
                 vx(k) = -vx(k);
             end
             px(k) = 0.799e-7;
-        end
+        %end
         % Reflection on right of upper box
-        if (0.6e-7 <= py(k) && py(k) <= 1e-7) && (1e-7 <= px(k) && px(k) <= 1.2e-7)
+        elseif (0.6e-7 <= py(k) && py(k) <= 1e-7) && (1e-7 <= px(k) && px(k) <= 1.2e-7)
             if SPECDIFF_BOUND == 1
                 vx(k) = (vth/sqrt(2))*randn();
                 vy(k) = (vth/sqrt(2))*randn();
@@ -176,17 +178,21 @@ for t=2:500
             end
             px(k) = 1.201e-7;
         end
+        
+        
+        
+        
         % Reflection on bottom of upper box
-        if (px(k) > 0.8e-7 && px(k) < 1.2e-7)
-            if py(k) > 0.6e-7
-                vy(k) = -vy(k);
-                py(k) = 0.599e-7;
-            end
-            if py(k) < 0.4e-7
-                vy(k) = -vy(k);
-                py(k) = 0.401e-7;
-            end
-        end
+%         elseif (px(k) > 0.8e-7 && px(k) < 1.2e-7)
+%             if py(k) > 0.6e-7
+%                 vy(k) = -vy(k);
+%                 py(k) = 0.599e-7;
+%             end
+%             if py(k) < 0.4e-7
+%                 vy(k) = -vy(k);
+%                 py(k) = 0.401e-7;
+%             end
+%         end
 
 %         if (0 <= py(k) && py(k) <= 0.4e-7)
 %             if (0.8e-7 <= px(k) && px(k) <= 1e-7)
@@ -232,19 +238,6 @@ for t=2:500
 %                     py(k) = 0.599e-7;
 %                 end
 %             end
-%         end
-
-
-
-
-
-
-
-
-
-
-
-
 %         if (py(k) >= 0.6e-7) && (0.8e-7 <= px(k) && px(k) <= 1.2e-7)
 %             if SPECDIFF_BOUND == 1
 %                 vx(k) = (vth/sqrt(2))*randn();
@@ -267,7 +260,7 @@ for t=2:500
 
 
 
-        
+   
         % X-axis transition
         if px(k) >= 200e-9
             px(k) = 0;
