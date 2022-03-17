@@ -1,4 +1,5 @@
 clear all
+close all
 clc
 set(0,'DefaultFigureWindowStyle','docked')
 set(0,'defaultaxesfontsize',10)
@@ -163,7 +164,7 @@ Curr = (C0 + Cnx) * 0.5;
 Ex = Ex';
 Ey = Ey';
 
-figure(4)
+figure(3)
 subplot(2, 2, 3), quiver(Ex, Ey);
 axis([0 nx 0 ny]);
 title('Electric Field Map')
@@ -252,6 +253,12 @@ ny = fMesh*100;
 La = linspace(0,L,nx);
 Wa = linspace(0,W,ny);
 
+deltax = L/nx;
+deltay = W/ny;
+
+% Ex = Ex./deltax;
+% Ey = Ey./deltay;
+
 % Emapx = zeros(ny,nx);
 Emapx = Ex;
 % Emapy = zeros(ny,nx);
@@ -320,12 +327,16 @@ vy_total = 0;
 sampleidx = randi(N,10,1);
 Ix = 0;
 Jx = 0;
+aex = aex';
+aey = aey';
 
 for t=2:300
     vx_total = 0;
     vy_total = 0;
     for k=1:N
         
+        rpx = 0;
+        rpy = 0;
         P_scat(k) = 1 - exp(-(dt/Tmn));
         if P_scat(k) > rand()
             vx(k) = (vth/sqrt(2))*randn();
@@ -335,11 +346,23 @@ for t=2:300
         end
         
         px_prev(k) = px(k);
-        px(k) = px(k) + vx(k)*dt + aex*dt^2;        % Adding acceleration
-        vx(k) = vx(k) + aex*dt;
         py_prev(k) = py(k);
-        py(k) = py(k) + vy(k)*dt + aey*dt^2;
-        vy(k) = vy(k) + aey*dt;
+        
+        rpx = round(px(k)*1e9);
+        if rpx == 0
+            rpx = 200;
+        end
+        rpy = round(py(k)*1e9);
+        if rpy == 0
+            rpy = 1;
+        end
+
+        
+               
+        px(k) = px(k) + vx(k)*dt + aex(rpx,rpy)*dt^2;        % Adding acceleration
+        vx(k) = vx(k) + aex(rpx,rpy)*dt;
+        py(k) = py(k) + vy(k)*dt + aey(rpx,rpy)*dt^2;
+        vy(k) = vy(k) + aey(rpx,rpy)*dt;
         
 
         % Reflection on top and bottom borders
@@ -519,12 +542,12 @@ for e=1:Nbins
     end
 end
 
-[V,W] = meshgrid(0:1e-8:2e-7,0:0.5e-8:1e-7);
-figure(3)
-surf(V,W,T_map,'FaceColor','interp')
-%view(2)
-title('Temperature Map of Modeled Region')
-xlabel('Region x-Axis (m)')
-ylabel('Region y-Axis (m)')
-zlabel('Temperature (K)')
-saveas(gcf,'Figure3')
+% [V,W] = meshgrid(0:1e-8:2e-7,0:0.5e-8:1e-7);
+% figure(3)
+% surf(V,W,T_map,'FaceColor','interp')
+% %view(2)
+% title('Temperature Map of Modeled Region')
+% xlabel('Region x-Axis (m)')
+% ylabel('Region y-Axis (m)')
+% zlabel('Temperature (K)')
+% saveas(gcf,'Figure3')
