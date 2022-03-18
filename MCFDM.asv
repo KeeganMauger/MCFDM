@@ -277,12 +277,7 @@ disp('Section 1')
 fprintf(...
 '\nFor an applied voltage of %f V across the x dimension, the electric field on the electrons is %e V/m.'...
 ,V0x,E0x)
-fprintf('\n\nWith the electric field of %e V/m, the force on each electron is %e N.',E0x,Fex)
-fprintf('\n\nWith the force known, the acceleration of each electron is %e m/s^2.',aex)
-fprintf('\n\nThe formula to find current in the x dimension is: Ix = (e*n*v_dx)(W*L)')
-fprintf('\nWhere:')
-fprintf('\ne is the electron charge')
-fprintf('\nn is the concentration of electrons')
-fprintf('\nv_dx is the drift velocity of the electrons in the x direction')
-fprintf('\nW and L are the region width and length')
+fprintf('\nWith the electric field of %e V/m, the force on each electron is %e N.',E0x,Fex)
+fprintf('\nWith the force known, the acceleration of each electron is %e m/s^2.',aex)
+fprintf('The formula to find current is: Ix = e*n*v_dx
 

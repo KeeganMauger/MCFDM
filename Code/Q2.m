@@ -15,7 +15,7 @@ set(0,'DefaultLineLineWidth', 0.5);
 
 L = 200e-9;
 W = 100e-9;
-V0 = 1;
+V0 = 0.1;
 
 fMesh = 1;
 nx = fMesh*200;
@@ -59,7 +59,7 @@ for i = 1:nx                %Iteration through length
         if i == 1          % x=0 BCs
             G(n,:) = 0;
             G(n,n) = 1;
-            F(n) = 1;
+            F(n) = V0;
         elseif i == nx     % x=1 BCs
             G(n,:) = 0;
             G(n,n) = 1;
@@ -256,8 +256,8 @@ Wa = linspace(0,W,ny);
 deltax = L/nx;
 deltay = W/ny;
 
-% Ex = Ex./deltax;
-% Ey = Ey./deltay;
+Ex = Ex./deltax;
+Ey = Ey./deltay;
 
 % Emapx = zeros(ny,nx);
 Emapx = Ex;
@@ -330,6 +330,9 @@ Jx = 0;
 aex = aex';
 aey = aey';
 
+% aex(:,:) = 3e17;    % Testing acceleration
+% aey(:,:) = 0;
+
 for t=2:300
     vx_total = 0;
     vy_total = 0;
@@ -350,7 +353,7 @@ for t=2:300
         
         rpx = round(px(k)*1e9);
         if rpx == 0
-            rpx = 200;
+            rpx = 1;
         end
         rpy = round(py(k)*1e9);
         if rpy == 0
