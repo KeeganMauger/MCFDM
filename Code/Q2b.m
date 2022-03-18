@@ -247,6 +247,7 @@ for t=2:300
     Jx = C.q_0 * 1e17 * vx_drift;
     Ix_prev = Ix;
     Ix = Jx * (W*L);
+    Ix_total(t) = Ix;
     
     
     subplot(2,1,2);

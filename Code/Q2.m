@@ -164,12 +164,20 @@ Curr = (C0 + Cnx) * 0.5;
 Ex = Ex';
 Ey = Ey';
 
-figure(3)
-subplot(2, 2, 3), quiver(Ex, Ey);
+figure(4)
+subplot(1, 2, 2), quiver(Ex, Ey);
 axis([0 nx 0 ny]);
 title('Electric Field Map')
 xlabel('Region Length')
 ylabel('Region Width')
+pbaspect([1 1 0.5])
+subplot(1, 2, 1), H = surf(La,Wa,Vmap');
+set(H, 'linestyle', 'none');
+%view(90, 270)
+title('Voltage Map')
+xlabel('Region Length')
+ylabel('Region Width')
+pbaspect([1 1 0.5])
 saveas(gcf,'Figure4')
 
 clearvars -except Ex Ey
@@ -206,7 +214,7 @@ temp = C.T;
 
 SPECDIFF_BOUND = 0;
 
-figure(1)
+figure(3)
 subplot(2,1,1);
 rectangle('Position',[0 0 200e-9 100e-9])
 hold on
@@ -333,13 +341,23 @@ aey = aey';
 % aex(:,:) = 3e17;    % Testing acceleration
 % aey(:,:) = 0;
 
-for t=2:300
+for t=2:1000
     vx_total = 0;
     vy_total = 0;
     for k=1:N
         
         rpx = 0;
         rpy = 0;
+        if px(k) == 200e-9
+            px(k) = 0;
+            px_prev(k) = px(k);
+        elseif px(k) == 0
+            px(k) = 200e-9;
+            px_prev(k) = px(k);
+        else
+            px(k) = px(k);
+        end
+
         P_scat(k) = 1 - exp(-(dt/Tmn));
         if P_scat(k) > rand()
             vx(k) = (vth/sqrt(2))*randn();
@@ -442,12 +460,12 @@ for t=2:300
         end
 
         % x-axis transition
-        if px(k) >= 200e-9
-            px(k) = 0;
-            px_prev(k) = px(k);
-        elseif px(k) <= 0
+        if px(k) > 200e-9
             px(k) = 200e-9;
-            px_prev(k) = px(k);
+%             px_prev(k) = px(k);
+        elseif px(k) < 0
+            px(k) = 0;
+%             px_prev(k) = px(k);
         else
             px(k) = px(k);
         end
@@ -471,6 +489,7 @@ for t=2:300
     Jx = C.q_0 * 1e17 * vx_drift;
     Ix_prev = Ix;
     Ix = Jx * (W*L);
+    Ix_total(t) = Ix;
     
     
     subplot(2,1,2);
@@ -492,8 +511,8 @@ MFP = mean(v)*mean(ndt);
 
 subplot(2,1,1);
 title('Maxwell-Boltzmann Velocity Distributions of Electrons with Scattering')
-xlabel('Region Width (m)')
-ylabel('Region Height (m)')
+xlabel('Region Length (m)')
+ylabel('Region Width (m)')
 subplot(2,1,2);
 title('Current over Time')
 xlabel('Timesteps (1e-14 s per step)') 
@@ -505,52 +524,17 @@ ylabel('Current (A)')
 % fprintf('\nThe thermal velocity is %e meters per second.',vth)
 % fprintf('\nThe mean free path is %e meters.\n\n\n',MFP)
 pause(0.1)
-saveas(gcf,'Figure1')
+saveas(gcf,'Figure3')
 
 
 
 
 E_map = [reshape(px,[N,1]),reshape(py,[N,1])];
-figure(2)
+figure(5)
 hist3(E_map,'CDataMode','auto','FaceColor','interp')
 %view(2)
 title('Electron Density in Modeled Region')
 xlabel('Region x-Axis (m)')
 ylabel('Region y-Axis (m)')
 zlabel('Electron Density')
-saveas(gcf,'Figure2')
-
-Nbins = 21;
-d = 1;
-u = 1;
-vtm = 0;
-vbm = 0;
-vbm2 = 0;
-T_map = zeros(Nbins);
-[X,Xe] = discretize(px,Nbins);
-[Y,Ye] = discretize(py,Nbins);
-
-for e=1:Nbins
-    for f=1:Nbins
-        for g=1:N
-            if X(g) == e && Y(g) == f
-                vtm(d) = v(g);
-                vtm2(d) = vtm(d).*vtm(d);
-                d = d+1;
-            end
-        end
-    vbm2 = mean(vtm2);
-    d = 1;
-    T_map(e,f) = (0.5*C.m_n*vbm2)/C.kb;
-    end
-end
-
-% [V,W] = meshgrid(0:1e-8:2e-7,0:0.5e-8:1e-7);
-% figure(3)
-% surf(V,W,T_map,'FaceColor','interp')
-% %view(2)
-% title('Temperature Map of Modeled Region')
-% xlabel('Region x-Axis (m)')
-% ylabel('Region y-Axis (m)')
-% zlabel('Temperature (K)')
-% saveas(gcf,'Figure3')
+saveas(gcf,'Figure5')
