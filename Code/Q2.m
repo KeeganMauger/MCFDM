@@ -1,7 +1,7 @@
 clear all
 close all
 clc
-set(0,'DefaultFigureWindowStyle','docked')
+%set(0,'DefaultFigureWindowStyle','docked')
 set(0,'defaultaxesfontsize',10)
 set(0,'defaultaxesfontname','Times New Roman')
 set(0,'DefaultLineLineWidth', 0.5);
